@@ -26,6 +26,22 @@ import time
 from scipy.interpolate import interp1d
 from collections import namedtuple
 
+def hsv2rgb_mp4(input_loc = "video/moon_circle_hsv"):
+    # loc = loc
+    cap = cv2.VideoCapture(input_loc)
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    output_file = input_loc[:-4] + "_hsv2rgb" + ".avi"
+    out = cv2.VideoWriter(output_file, fourcc, 20.0, (640,  480))
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            print("Can't receive frame (stream end?). Exiting ...")
+            break
+        frame = cv2.cvtColor(frame, cv2.COLOR_HSV2RGB)
+        out.write(frame)
+    cap.release()
+    out.release()
+
 def path_planning(num_frames, x, y, z, path_type=''):
     if path_type == 'straight-line':
         corner_points = np.array([[0, 0, 0], [(0 + x) * 0.5, (0 + y) * 0.5, (0 + z) * 0.5], [x, y, z]])
