@@ -1,6 +1,7 @@
 import os
 import glob
 import cv2
+import ffmpeg
 import scipy.misc as misc
 from skimage.transform import resize
 import numpy as np
@@ -29,9 +30,20 @@ from collections import namedtuple
 def hsv2rgb_mp4(input_loc = "video/moon_circle_hsv"):
     # loc = loc
     cap = cv2.VideoCapture(input_loc)
+    cap.set(cv2.CAP_PROP_FOURCC, cv2.FOURCC('H', '2', '6', '5'))
+    # cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('Y','1','6',' '))
+    # cap.set(cv2.CAP_PROP_CONVERT_RGB, False)
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
     output_file = input_loc[:-4] + "_hsv2rgb" + ".avi"
     out = cv2.VideoWriter(output_file, fourcc, 20.0, (640,  480))
+
+    # ff_proc = (
+    #     ffmpeg
+    #     .input('pipe:',format='rawvideo',pix_fmt='gray16le',s='%sx%s'%(int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)),int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))),r='60')
+    #     .output(output_file,vcodec='ffv1',an=None)
+    #     .run_async(pipe_stdin=True)
+    # )
+
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
@@ -39,6 +51,9 @@ def hsv2rgb_mp4(input_loc = "video/moon_circle_hsv"):
             break
         frame = cv2.cvtColor(frame, cv2.COLOR_HSV2RGB)
         out.write(frame)
+        # ff_proc.stdin.write(frame)
+
+    
     cap.release()
     out.release()
 

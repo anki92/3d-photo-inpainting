@@ -1,6 +1,7 @@
 PyYAML
 ez_setup
 Cython
+ffmpeg
 opencv-python==4.2.0.32
 vispy==0.6.4
 moviepy==1.0.2
