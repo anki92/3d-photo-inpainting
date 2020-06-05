@@ -1,3 +1,4 @@
+PyYAML
 ez_setup
 Cython
 opencv-python==4.2.0.32

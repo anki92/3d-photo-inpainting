@@ -21,6 +21,7 @@ from MiDaS.run import run_depth
 from MiDaS.monodepth_net import MonoDepthNet
 import MiDaS.MiDaS_utils as MiDaS_utils
 from bilateral_filtering import sparse_bilateral_filtering
+import matplotlib
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', type=str, default='argument.yml',help='Configure of post processing')
@@ -47,7 +48,9 @@ for idx in tqdm(range(len(sample_list))):
     print("Current Source ==> ", sample['src_pair_name'])
     mesh_fi = os.path.join(config['mesh_folder'], sample['src_pair_name'] +'.ply')
     image = imageio.imread(sample['ref_img_fi'])
-
+    if config['hsv_channel'] is True:
+        print(f"Converting to hsv color channel")
+        image = matplotlib.colors.rgb_to_hsv(image)
     print(f"Running depth extraction at {time.time()}")
     if config['require_midas'] is True:
         run_depth([sample['ref_img_fi']], config['src_folder'], config['depth_folder'],
